@@ -1,104 +1,147 @@
 import { Link, useLocation } from "react-router-dom";
 import { useAuthStore } from "@/store/auth";
+import { useState } from "react";
 
 const links = [
-  ["Events", "/events", "#FF6B6B"],
-  ["Forum", "/forum", "#4ECDC4"],
-  ["Projects", "/projects", "#FFD166"],
-  ["Clubs", "/clubs", "#06D6A0"],
-  ["Marketplace", "/marketplace", "#118AB2"],
-  ["Lost & Found", "/lostfound", "#073B4C"],
-  ["Alumni", "/alumni", "#7209B7"],
-  ["Hackathons", "/hackathons", "#F72585"],
-  ["Notices", "/notices", "#3A86FF"],
+  ["Events", "/events"],
+  ["Forum", "/forum"],
+  // ["Projects", "/projects"],
+  // ["Clubs", "/clubs"],
+  // ["Marketplace", "/marketplace"],
+  // ["Lost & Found", "/lostfound"],
+  // ["Alumni", "/alumni"],
+  // ["Hackathons", "/hackathons"],
+  // ["Notices", "/notices"],
 ] as const;
 
 export default function Shell({ children }: { children: React.ReactNode }) {
   const { pathname } = useLocation();
   const { user, logout } = useAuthStore();
+  const [menuOpen, setMenuOpen] = useState(false);
+
   const isAuthPage = ["/login", "/register", "/verify"].some((p) =>
     pathname.startsWith(p)
   );
 
   return (
-    <div className="min-h-screen flex bg-gradient-to-br from-blue-50 to-purple-50">
+    <div className="min-h-screen flex flex-col bg-gradient-to-br from-blue-50 to-purple-50">
       {!isAuthPage && (
-        <aside className="w-80 bg-indigo-600 border-r hidden md:block shadow-xl">
-          <div className="p-6 font-bold text-2xl text-white flex items-center">
-            <div className="bg-white text-indigo-600 p-2 rounded-lg mr-3">
+        <header className="sticky top-0 z-20 bg-white shadow-md">
+          <div className="max-w-7xl mx-auto px-4 md:px-8 flex items-center justify-between h-16">
+            {/* Logo */}
+            <div className="flex items-center space-x-2 font-bold text-xl text-indigo-700">
               <CampusIcon />
+              <span>Campus</span>
             </div>
-            Campus Community
-          </div>
-          <nav className="p-4 space-y-3">
-            {links.map(([label, href, color]) => (
-              <Link
-                key={href}
-                to={href}
-                className={`flex items-center px-4 py-3 rounded hover:scale-105 hover:border-2 ${
-                  pathname.startsWith(href)
-                    ? "text-white font-bold bg-[#171717]"
-                    : "text-indigo-100 hover:text-white"
-                }`}
-                style={{
-                  border: pathname.startsWith(href) ? "none" : `none`,
-                }}
-              >
-                {label}
-              </Link>
-            ))}
-          </nav>
-          <div className="absolute bottom-0 w-full p-4">
-            {user && (
-              <div className="flex items-center text-white">
-                <div className="w-10 h-10 rounded-full bg-white text-indigo-600 flex items-center justify-center font-bold mr-3">
-                  {user.name.charAt(0).toUpperCase()}
-                </div>
-                <div>
-                  <p className="text-sm font-medium">Hi, {user.name}</p>
-                  <p className="text-xs text-indigo-200">{user.email}</p>
-                </div>
-              </div>
-            )}
-          </div>
-        </aside>
-      )}
-      <main className="flex-1">
-        {!isAuthPage && (
-          <header className="sticky top-0 z-10 bg-white border-b px-6 py-4 flex items-center justify-end">
-            <div className="md:hidden">
-              <span className="font-bold text-transparent bg-clip-text bg-gradient-to-r from-indigo-600 to-purple-600 text-xl">
-                Campus
-              </span>
-            </div>
-            <div className="flex items-center gap-4">
+
+            {/* Desktop Nav */}
+            <nav className="hidden md:flex items-center space-x-6">
+              {links.map(([label, href]) => (
+                <Link
+                  key={href}
+                  to={href}
+                  className={`text-sm font-medium transition ${
+                    pathname.startsWith(href)
+                      ? "text-indigo-700 border-b-2 border-indigo-700"
+                      : "text-gray-600 hover:text-indigo-600"
+                  }`}
+                >
+                  {label}
+                </Link>
+              ))}
               {user && (
-                <span className="text-sm text-gray-600 hidden md:block">
-                  Welcome back, <span className="font-medium">{user.name}</span>
-                  !
-                </span>
+                <button
+                  onClick={logout}
+                  className="text-sm px-4 py-2 rounded-md bg-red-500 text-white shadow hover:bg-red-600 transition"
+                >
+                  Logout
+                </button>
               )}
-              <button
-                onClick={logout}
-                className="text-sm px-4 py-2 rounded border border-indigo-100 bg-red-400 text-white hover:from-indigo-600 hover:to-purple-600 transition-all shadow-md hover:shadow-lg"
+            </nav>
+
+            {/* Mobile menu button */}
+            <button
+              onClick={() => setMenuOpen(!menuOpen)}
+              className="md:hidden p-2 rounded hover:bg-gray-100"
+            >
+              <svg
+                className="h-6 w-6 text-gray-700"
+                fill="none"
+                viewBox="0 0 24 24"
+                stroke="currentColor"
               >
-                Logout
-              </button>
+                <path
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  strokeWidth={2}
+                  d={
+                    menuOpen
+                      ? "M6 18L18 6M6 6l12 12" // X icon
+                      : "M4 6h16M4 12h16M4 18h16" // Hamburger
+                  }
+                />
+              </svg>
+            </button>
+          </div>
+
+          {/* Mobile Nav Sidebar */}
+          {menuOpen && (
+            <div className="fixed inset-0 z-30">
+              {/* Overlay */}
+              <div
+                className="absolute inset-0 bg-black bg-opacity-40"
+                onClick={() => setMenuOpen(false)}
+              />
+
+              {/* Sidebar */}
+              <div className="absolute right-0 top-0 h-full w-64 bg-white shadow-lg flex flex-col">
+                <div className="flex-1 overflow-y-auto p-4 mt-10 space-y-2">
+                  {links.map(([label, href]) => (
+                    <Link
+                      key={href}
+                      to={href}
+                      className={`block px-3 py-2 rounded text-sm ${
+                        pathname.startsWith(href)
+                          ? "text-indigo-700 font-semibold bg-indigo-50"
+                          : "text-gray-700 hover:bg-gray-50"
+                      }`}
+                      onClick={() => setMenuOpen(false)}
+                    >
+                      {label}
+                    </Link>
+                  ))}
+                </div>
+
+                {user && (
+                  <div className="border-t p-4">
+                    <button
+                      onClick={() => {
+                        logout();
+                        setMenuOpen(false);
+                      }}
+                      className="w-full text-sm px-4 py-2 rounded-md bg-red-500 text-white shadow hover:bg-red-600 transition"
+                    >
+                      Logout
+                    </button>
+                  </div>
+                )}
+              </div>
             </div>
-          </header>
-        )}
-        <div className="p-6 max-w-6xl mx-auto">{children}</div>
-      </main>
+          )}
+        </header>
+      )}
+
+      <main className="flex-1 max-w-7xl mx-auto w-full p-6">{children}</main>
     </div>
   );
 }
 
-// Simple campus icon component
+// Simple campus icon
 function CampusIcon() {
   return (
     <svg
       xmlns="http://www.w3.org/2000/svg"
-      className="h-5 w-5"
+      className="h-6 w-6 text-indigo-600"
       fill="none"
       viewBox="0 0 24 24"
       stroke="currentColor"
