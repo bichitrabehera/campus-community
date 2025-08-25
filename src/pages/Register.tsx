@@ -21,7 +21,9 @@ export default function Register() {
           <h1 className="text-center text-2xl font-bold tracking-tight text-gray-900">
             Create your account
           </h1>
-          {message && <div className="text-green-700 text-sm mb-2">{message}</div>}
+          {message && (
+            <div className="text-green-700 text-sm mb-2">{message}</div>
+          )}
           {error && <div className="text-red-600 text-sm mb-2">{error}</div>}
 
           <div className="mt-10 sm:mx-auto sm:w-full sm:max-w-xl">
@@ -31,14 +33,15 @@ export default function Register() {
                 setError(null);
                 try {
                   await register(form as any);
-                  setMessage("Registered! Check your email for verification code.");
+                  setMessage(
+                    "Registered! Check your email for verification code."
+                  );
                 } catch (e: any) {
                   setError(e?.response?.data?.detail || e.message);
                 }
               }}
               className="space-y-4"
             >
-
               <div>
                 <label className="block text-sm font-medium text-gray-700 mb-1">
                   Name
@@ -61,7 +64,9 @@ export default function Register() {
                     className="block w-full rounded-md border border-gray-300 bg-white px-3 py-2 text-base text-gray-900 shadow-sm focus:outline-indigo-600 sm:text-sm"
                     placeholder="Email"
                     value={form.email}
-                    onChange={(e) => setForm({ ...form, email: e.target.value })}
+                    onChange={(e) =>
+                      setForm({ ...form, email: e.target.value })
+                    }
                   />
                 </div>
                 <div>

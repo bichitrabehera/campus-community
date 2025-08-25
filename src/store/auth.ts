@@ -23,7 +23,7 @@ export const useAuthStore = create<State>((set) => ({
     const me = await api.get("/auth/me");
     localStorage.setItem("user", JSON.stringify(me.data));
     set({ user: me.data });
-    window.location.href = "/events";
+    window.location.href = "/dashboard";
   },
   async register(payload) {
     await api.post("/auth/register", payload);

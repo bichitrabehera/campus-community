@@ -1,5 +1,4 @@
 import { useEffect, useState } from "react";
-import Card from "@/components/Card";
 import { api } from "@/services/api";
 
 type Item = any;
@@ -23,9 +22,10 @@ export default function Clubs() {
 
   return (
     <div className="space-y-4">
-      <Card
-        title="Clubs"
-        actions={
+      {/* Clubs Section */}
+      <div className="p-4 border rounded-2xl bg-gray-50 shadow-sm">
+        <div className="flex justify-between items-center mb-3">
+          <h2 className="text-lg font-semibold">Clubs</h2>
           <button
             onClick={async () => {
               setLoading(true);
@@ -44,8 +44,8 @@ export default function Clubs() {
           >
             {loading ? "Saving..." : "Create"}
           </button>
-        }
-      >
+        </div>
+
         <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-3">
           {items.map((it, i) => (
             <div key={i} className="border rounded-lg p-3 bg-white">
@@ -55,8 +55,11 @@ export default function Clubs() {
             </div>
           ))}
         </div>
-      </Card>
-      <Card title="New">
+      </div>
+
+      {/* New Club Form */}
+      <div className="p-4 border rounded-2xl bg-gray-50 shadow-sm">
+        <h2 className="text-lg font-semibold mb-3">New</h2>
         <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
           <input
             className="border rounded-md px-3 py-2"
@@ -86,7 +89,8 @@ export default function Clubs() {
             }
           />
         </div>
-      </Card>
+      </div>
+
       {error && <div className="text-red-600">{error}</div>}
     </div>
   );

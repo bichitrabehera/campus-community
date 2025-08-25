@@ -81,12 +81,16 @@ export default function Forum() {
   }, []);
 
   return (
-    <div className="max-w-3xl mx-auto space-y-6 p-4">
+    <div className="max-w-4xl mx-auto space-y-6 p-6">
       {/* Header */}
-      <h1 className="text-3xl font-bold text-gray-900">Welcome </h1>
-      <p className="text-gray-600">Discuss, share, and learn together</p>
+      <div>
+        <h1 className="text-3xl font-bold text-gray-900">Forum</h1>
+        <p className="text-gray-600">
+          Discuss, share, and learn together.
+        </p>
+      </div>
 
-      {/* New Post */}
+      {/* New Post Box */}
       <div className="bg-white border rounded-lg shadow-sm p-4 space-y-3">
         <input
           className="w-full border rounded-md px-3 py-2 text-sm"
@@ -101,110 +105,117 @@ export default function Forum() {
           value={form.content || ""}
           onChange={(e) => setForm((p) => ({ ...p, content: e.target.value }))}
         />
-        <button
-          onClick={async () => {
-            setLoading(true);
-            try {
-              await api.post("/forum/posts", form);
-              setForm({});
-              await load();
-            } catch (e: any) {
-              setError(e?.response?.data?.detail || e.message);
-            } finally {
-              setLoading(false);
-            }
-          }}
-          className="px-4 py-2 bg-blue-600 text-white rounded-md text-sm hover:bg-blue-700"
-        >
-          {loading ? "Posting..." : "Post"}
-        </button>
+        <div className="flex justify-end">
+          <button
+            onClick={async () => {
+              setLoading(true);
+              try {
+                await api.post("/forum/posts", form);
+                setForm({});
+                await load();
+              } catch (e: any) {
+                setError(e?.response?.data?.detail || e.message);
+              } finally {
+                setLoading(false);
+              }
+            }}
+            className="px-4 py-2 bg-blue-600 text-white rounded-md text-sm hover:bg-blue-700"
+          >
+            {loading ? "Posting..." : "Post"}
+          </button>
+        </div>
       </div>
 
-      {/* Posts list */}
+      {/* Posts */}
       <div className="space-y-4">
         {posts.map((post) => (
           <div
             key={post.id}
-            className="bg-white border rounded-lg shadow-sm p-4 space-y-3"
+            className="bg-white border rounded-lg shadow-md flex p-4 gap-4"
           >
-            <div className="flex justify-between items-start gap-3">
-              {/* Post Content */}
-              <div className="flex-1">
-                <h2 className="text-lg font-semibold">{post.title}</h2>
-                <p className="text-gray-700 text-sm">{post.content}</p>
-                <div className="text-xs text-gray-500 mt-1">
-                  Posted {new Date(post.created_at).toLocaleString()}
-                </div>
-
-                {/* Toggle replies */}
-                <button
-                  onClick={async () => {
-                    setExpanded((p) => ({
-                      ...p,
-                      [post.id]: !p[post.id],
-                    }));
-                    if (!expanded[post.id]) {
-                      await loadReplies(post.id);
-                    }
-                  }}
-                  className="text-xs text-blue-600 mt-2 hover:underline"
-                >
-                  {expanded[post.id]
-                    ? "Hide Replies"
-                    : `Show Replies (${replies[post.id]?.length || 0})`}
-                </button>
-
-                {/* Replies Section */}
-                {expanded[post.id] && (
-                  <div className="mt-3 space-y-2 border-l pl-3">
-                    {replies[post.id]?.map((r) => (
-                      <div
-                        key={r.id}
-                        className="flex justify-between items-start"
-                      >
-                        <p className="text-sm text-gray-700 flex-1">{r.body}</p>
-                        <button
-                          onClick={() => handleUpvoteReply(r.id, post.id)}
-                          className="flex flex-col items-center text-gray-500 hover:text-blue-600 ml-2"
-                        >
-                          <span className="text-lg">▲</span>
-                          <span className="text-xs">{r.upvotes}</span>
-                        </button>
-                      </div>
-                    ))}
-
-                    {/* Reply Input (always visible) */}
-                    <div className="flex gap-2 pt-2">
-                      <input
-                        className="flex-1 border rounded-md px-2 py-1 text-sm"
-                        placeholder="Reply..."
-                        value={replyForms[post.id] || ""}
-                        onChange={(e) =>
-                          setReplyForms((p) => ({
-                            ...p,
-                            [post.id]: e.target.value,
-                          }))
-                        }
-                      />
-                      <button
-                        onClick={() => handleReply(post.id)}
-                        className="px-3 py-1 bg-blue-600 text-white rounded-md text-xs hover:bg-blue-700"
-                      >
-                        Reply
-                      </button>
-                    </div>
-                  </div>
-                )}
-              </div>
-
-              {/* Upvote Button (Right side) */}
+            {/* Upvote Column */}
+            <div className="flex flex-col items-center text-gray-500">
               <button
                 onClick={() => handleUpvotePost(post.id)}
-                className="flex flex-col items-center text-gray-500 hover:text-blue-600 ml-2"
+                className="hover:text-blue-600"
               >
-                <span className="text-2xl">▲</span>
-                <span className="text-sm font-semibold">{post.upvotes}</span>
+                ▲
               </button>
+              <span className="font-semibold">{post.upvotes}</span>
+            </div>
+
+            {/* Post Content */}
+            <div className="flex-1 space-y-2">
+              <h2 className="text-lg font-semibold">{post.title}</h2>
+              <p className="text-gray-700">{post.content}</p>
+              <div className="text-xs text-gray-500">
+                Posted {new Date(post.created_at).toLocaleString()}
+              </div>
+
+              {/* Show/Hide Replies */}
+              <button
+                onClick={async () => {
+                  setExpanded((p) => ({
+                    ...p,
+                    [post.id]: !p[post.id],
+                  }));
+                  if (!expanded[post.id]) {
+                    await loadReplies(post.id);
+                  }
+                }}
+                className="text-xs text-blue-600 mt-2 hover:underline"
+              >
+                {expanded[post.id]
+                  ? "Hide Replies"
+                  : `Show Replies (${replies[post.id]?.length || 0})`}
+              </button>
+
+              {/* Replies */}
+              {expanded[post.id] && (
+                <div className="mt-3 space-y-3 border-t pt-3">
+                  {replies[post.id]?.map((r) => (
+                    <div
+                      key={r.id}
+                      className="flex items-start justify-between gap-2 bg-gray-50 p-2 rounded-md"
+                    >
+                      <div className="flex-1">
+                        <p className="text-sm">{r.body}</p>
+                        <span className="text-xs text-gray-400">
+                          {new Date(r.created_at).toLocaleString()}
+                        </span>
+                      </div>
+                      <button
+                        onClick={() => handleUpvoteReply(r.id, post.id)}
+                        className="flex flex-col items-center text-gray-500 hover:text-blue-600"
+                      >
+                        <span>▲</span>
+                        <span className="text-xs">{r.upvotes}</span>
+                      </button>
+                    </div>
+                  ))}
+
+                  {/* Reply Input */}
+                  <div className="flex gap-2">
+                    <input
+                      className="flex-1 border rounded-md px-2 py-1 text-sm"
+                      placeholder="Reply..."
+                      value={replyForms[post.id] || ""}
+                      onChange={(e) =>
+                        setReplyForms((p) => ({
+                          ...p,
+                          [post.id]: e.target.value,
+                        }))
+                      }
+                    />
+                    <button
+                      onClick={() => handleReply(post.id)}
+                      className="px-3 py-1 bg-blue-600 text-white rounded-md text-xs hover:bg-blue-700"
+                    >
+                      Reply
+                    </button>
+                  </div>
+                </div>
+              )}
             </div>
           </div>
         ))}

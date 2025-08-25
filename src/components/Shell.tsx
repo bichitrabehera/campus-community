@@ -5,13 +5,13 @@ import { useState } from "react";
 const links = [
   ["Events", "/events"],
   ["Forum", "/forum"],
-  // ["Projects", "/projects"],
-  // ["Clubs", "/clubs"],
-  // ["Marketplace", "/marketplace"],
-  // ["Lost & Found", "/lostfound"],
-  // ["Alumni", "/alumni"],
-  // ["Hackathons", "/hackathons"],
-  // ["Notices", "/notices"],
+  ["Projects", "/projects"],
+  ["Clubs", "/clubs"],
+  ["Marketplace", "/marketplace"],
+  ["Lost & Found", "/lostfound"],
+  ["Alumni", "/alumni"],
+  ["Hackathons", "/hackathons"],
+  ["Notices", "/notices"],
 ] as const;
 
 export default function Shell({ children }: { children: React.ReactNode }) {

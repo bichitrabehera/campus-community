@@ -16,6 +16,7 @@ export default function Events() {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [success, setSuccess] = useState<string | null>(null);
+  const [showForm, setShowForm] = useState(false);
 
   async function load() {
     try {
@@ -49,6 +50,7 @@ export default function Events() {
         location: "",
       });
       setSuccess("Event created successfully!");
+      setShowForm(false); // hide form after success
       await load();
     } catch (e: any) {
       setError(e?.response?.data?.detail || e.message);
@@ -62,97 +64,127 @@ export default function Events() {
       <div className="max-w-7xl mx-auto space-y-6 sm:space-y-8">
         {/* Create Event Form - Admin Only */}
         {userIsAdmin && (
-          <div className="bg-white rounded-md shadow-sm p-4 sm:p-6">
-            <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between mb-4 sm:mb-6">
-              <h2 className="text-base sm:text-lg font-medium text-gray-900">
-                Create New Event
-              </h2>
-            </div>
-
-            <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-              <div>
-                <label className="text-sm text-gray-600">Title</label>
-                <input
-                  className="w-full border border-gray-300 rounded-md px-3 py-2 mt-1 focus:outline-none focus:ring-1 focus:ring-gray-900"
-                  placeholder="Event title"
-                  type="text"
-                  value={form.title}
-                  onChange={(e) =>
-                    setForm((p: any) => ({ ...p, title: e.target.value }))
-                  }
-                />
-              </div>
-
-              <div>
-                <label className="text-sm text-gray-600">Category</label>
-                <input
-                  className="w-full border border-gray-300 rounded-md px-3 py-2 mt-1 focus:outline-none focus:ring-1 focus:ring-gray-900"
-                  placeholder="Category"
-                  type="text"
-                  value={form.category}
-                  onChange={(e) =>
-                    setForm((p: any) => ({ ...p, category: e.target.value }))
-                  }
-                />
-              </div>
-
-              <div>
-                <label className="text-sm text-gray-600">Starts At</label>
-                <input
-                  className="w-full border border-gray-300 rounded-md px-3 py-2 mt-1 focus:outline-none focus:ring-1 focus:ring-gray-900"
-                  type="datetime-local"
-                  value={form.starts_at}
-                  onChange={(e) =>
-                    setForm((p: any) => ({ ...p, starts_at: e.target.value }))
-                  }
-                />
-              </div>
-
-              <div>
-                <label className="text-sm text-gray-600">Ends At</label>
-                <input
-                  className="w-full border border-gray-300 rounded-md px-3 py-2 mt-1 focus:outline-none focus:ring-1 focus:ring-gray-900"
-                  type="datetime-local"
-                  value={form.ends_at}
-                  onChange={(e) =>
-                    setForm((p: any) => ({ ...p, ends_at: e.target.value }))
-                  }
-                />
-              </div>
-
-              <div className="sm:col-span-2">
-                <label className="text-sm text-gray-600">Description</label>
-                <textarea
-                  className="w-full border border-gray-300 rounded-md px-3 py-2 mt-1 focus:outline-none focus:ring-1 focus:ring-gray-900"
-                  placeholder="Event description"
-                  rows={3}
-                  value={form.description}
-                  onChange={(e) =>
-                    setForm((p: any) => ({ ...p, description: e.target.value }))
-                  }
-                />
-              </div>
-
-              <div className="sm:col-span-2">
-                <label className="text-sm text-gray-600">Location</label>
-                <input
-                  className="w-full border border-gray-300 rounded-md px-3 py-2 mt-1 focus:outline-none focus:ring-1 focus:ring-gray-900"
-                  placeholder="Event location"
-                  type="text"
-                  value={form.location}
-                  onChange={(e) =>
-                    setForm((p: any) => ({ ...p, location: e.target.value }))
-                  }
-                />
-              </div>
+          <div>
+            {!showForm ? (
               <button
-                onClick={handleCreate}
-                disabled={loading}
-                className="mt-3 sm:mt-0 text-sm px-4 py-2 rounded-md bg-gray-900 text-white hover:bg-gray-800 disabled:opacity-50 transition-colors w-full sm:w-auto"
+                onClick={() => setShowForm(true)}
+                className="px-4 py-2 rounded-md bg-gray-900 text-white hover:bg-gray-800 transition-colors"
               >
-                {loading ? "Saving..." : "Create"}
+                + Create Event
               </button>
-            </div>
+            ) : (
+              <div className="bg-white rounded-md shadow-sm p-4 sm:p-6 space-y-4">
+                <div className="flex justify-between items-center">
+                  <h2 className="text-base sm:text-lg font-medium text-gray-900">
+                    New Event
+                  </h2>
+                  <button
+                    onClick={() => setShowForm(false)}
+                    className="text-sm text-gray-500 hover:text-gray-700"
+                  >
+                    ✕ Cancel
+                  </button>
+                </div>
+
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                  <div>
+                    <label className="text-sm text-gray-600">Title</label>
+                    <input
+                      className="w-full border border-gray-300 rounded-md px-3 py-2 mt-1 focus:ring-1 focus:ring-gray-900"
+                      placeholder="Event title"
+                      type="text"
+                      value={form.title}
+                      onChange={(e) =>
+                        setForm((p: any) => ({ ...p, title: e.target.value }))
+                      }
+                    />
+                  </div>
+
+                  <div>
+                    <label className="text-sm text-gray-600">Category</label>
+                    <input
+                      className="w-full border border-gray-300 rounded-md px-3 py-2 mt-1 focus:ring-1 focus:ring-gray-900"
+                      placeholder="Category"
+                      type="text"
+                      value={form.category}
+                      onChange={(e) =>
+                        setForm((p: any) => ({
+                          ...p,
+                          category: e.target.value,
+                        }))
+                      }
+                    />
+                  </div>
+
+                  <div>
+                    <label className="text-sm text-gray-600">Starts At</label>
+                    <input
+                      className="w-full border border-gray-300 rounded-md px-3 py-2 mt-1 focus:ring-1 focus:ring-gray-900"
+                      type="datetime-local"
+                      value={form.starts_at}
+                      onChange={(e) =>
+                        setForm((p: any) => ({
+                          ...p,
+                          starts_at: e.target.value,
+                        }))
+                      }
+                    />
+                  </div>
+
+                  <div>
+                    <label className="text-sm text-gray-600">Ends At</label>
+                    <input
+                      className="w-full border border-gray-300 rounded-md px-3 py-2 mt-1 focus:ring-1 focus:ring-gray-900"
+                      type="datetime-local"
+                      value={form.ends_at}
+                      onChange={(e) =>
+                        setForm((p: any) => ({ ...p, ends_at: e.target.value }))
+                      }
+                    />
+                  </div>
+
+                  <div className="sm:col-span-2">
+                    <label className="text-sm text-gray-600">Description</label>
+                    <textarea
+                      className="w-full border border-gray-300 rounded-md px-3 py-2 mt-1 focus:ring-1 focus:ring-gray-900"
+                      placeholder="Event description"
+                      rows={3}
+                      value={form.description}
+                      onChange={(e) =>
+                        setForm((p: any) => ({
+                          ...p,
+                          description: e.target.value,
+                        }))
+                      }
+                    />
+                  </div>
+
+                  <div className="sm:col-span-2">
+                    <label className="text-sm text-gray-600">Location</label>
+                    <input
+                      className="w-full border border-gray-300 rounded-md px-3 py-2 mt-1 focus:ring-1 focus:ring-gray-900"
+                      placeholder="Event location"
+                      type="text"
+                      value={form.location}
+                      onChange={(e) =>
+                        setForm((p: any) => ({
+                          ...p,
+                          location: e.target.value,
+                        }))
+                      }
+                    />
+                  </div>
+                </div>
+
+                <button
+                  onClick={handleCreate}
+                  disabled={loading}
+                  className="mt-4 text-sm px-4 py-2 rounded-md bg-gray-900 text-white hover:bg-gray-800 disabled:opacity-50 transition-colors"
+                >
+                  {loading ? "Saving..." : "Create"}
+                </button>
+              </div>
+            )}
           </div>
         )}
 
