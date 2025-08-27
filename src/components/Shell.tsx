@@ -24,12 +24,12 @@ export default function Shell({ children }: { children: React.ReactNode }) {
   );
 
   return (
-    <div className="min-h-screen flex flex-col bg-gradient-to-br from-blue-50 to-purple-50">
+    <div className="min-h-screen flex flex-col bg-gradient-to-br from-black to-black">
       {!isAuthPage && (
-        <header className="sticky top-0 z-20 bg-white shadow-md">
+        <header className="sticky top-0 z-20 bg-black shadow-md">
           <div className="max-w-7xl mx-auto px-4 md:px-8 flex items-center justify-between h-16">
             {/* Logo */}
-            <div className="flex items-center space-x-2 font-bold text-xl text-indigo-700">
+            <div className="flex items-center space-x-2 font-bold text-xl text-white">
               <CampusIcon />
               <span>Campus</span>
             </div>
@@ -42,8 +42,8 @@ export default function Shell({ children }: { children: React.ReactNode }) {
                   to={href}
                   className={`text-sm font-medium transition ${
                     pathname.startsWith(href)
-                      ? "text-indigo-700 border-b-2 border-indigo-700"
-                      : "text-gray-600 hover:text-indigo-600"
+                      ? "text-sky-400 border-b-2 border-sky-600"
+                      : "text-white hover:text-sky-300"
                   }`}
                 >
                   {label}
@@ -141,7 +141,7 @@ function CampusIcon() {
   return (
     <svg
       xmlns="http://www.w3.org/2000/svg"
-      className="h-6 w-6 text-indigo-600"
+      className="h-6 w-6 text-white"
       fill="none"
       viewBox="0 0 24 24"
       stroke="currentColor"
