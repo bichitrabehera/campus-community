@@ -1,43 +1,71 @@
 import { Routes, Route, Navigate } from "react-router-dom";
 import Login from "./pages/Login";
 import Register from "./pages/Register";
-import Dashboard from "./pages/Dashboard";
-import Events from "./pages/Events";
-import Forum from "./pages/Forum";
-import Projects from "./pages/Projects";
-import Clubs from "./pages/Clubs";
-import Marketplace from "./pages/Marketplace";
-import LostFound from "./pages/LostFound";
-import Alumni from "./pages/Alumni";
-import Hackathons from "./pages/Hackathons";
-import Notices from "./pages/Notices";
+import Events from "./user/Events";
+import Forum from "./user/Forum";
+import Projects from "./user/Projects";
+import Clubs from "./user/Clubs";
+import Marketplace from "./user/Marketplace";
+import LostFound from "./user/LostFound";
+import Alumni from "./user/Alumni";
+import Hackathons from "./user/Hackathons";
+import Notices from "./user/Notices";
+import AdminDashboard from "./admin/index";
+import EventForm from "./admin/EventForm";
+import HackathonForm from "./admin/HackathonForm";
+import NoticeForm from "./admin/NoticeForm";
+import LostFoundForm from "./admin/LostFoundForm";
+
 import { useAuthStore } from "./store/auth";
 import Shell from "./components/Shell";
 import Footer from "./components/Footer";
+import UserIndex from "./user/index";
+import AdminProtected from "./components/AdminProtected";
 
-function Protected({ children }: { children: JSX.Element }) {
+import { isAdmin, hasRole, hasAnyRole, UserRoleType } from "@/utils/roles";
+
+function Protected({
+  children,
+  role,
+  roles,
+}: {
+  children: JSX.Element;
+  role?: UserRoleType;
+  roles?: UserRoleType[];
+}) {
   const token = useAuthStore((s) => s.token);
-  return token ? children : <Navigate to="/login" replace />;
+  const user = useAuthStore((s) => s.user);
+
+  if (!token) {
+    return <Navigate to="/login" replace />;
+  }
+
+  if (role && user && !hasRole(user.role, role)) {
+    return <Navigate to="/" replace />;
+  }
+
+  if (roles && user && !hasAnyRole(user.role, roles)) {
+    return <Navigate to="/" replace />;
+  }
+
+  return children;
 }
 
 export default function App() {
   return (
-    <div className="">
+    <div className="min-h-screen flex flex-col">
       <Shell>
         <Routes>
-          <Route path="/" element={<Navigate to="/events" replace />} />
+          {/* Redirect root → user index */}
+          <Route path="/" element={<UserIndex />} />
+
+          {/* Public routes */}
           <Route path="/login" element={<Login />} />
           <Route path="/register" element={<Register />} />
+
+          {/* User-protected routes */}
           <Route
-            path="/dashboard"
-            element={
-              <Protected>
-                <Dashboard />
-              </Protected>
-            }
-          />
-          <Route
-            path="/events"
+            path="/user/events"
             element={
               <Protected>
                 <Events />
@@ -45,7 +73,7 @@ export default function App() {
             }
           />
           <Route
-            path="/forum"
+            path="/user/forum"
             element={
               <Protected>
                 <Forum />
@@ -53,7 +81,7 @@ export default function App() {
             }
           />
           <Route
-            path="/projects"
+            path="/user/projects"
             element={
               <Protected>
                 <Projects />
@@ -61,7 +89,7 @@ export default function App() {
             }
           />
           <Route
-            path="/clubs"
+            path="/user/clubs"
             element={
               <Protected>
                 <Clubs />
@@ -69,7 +97,7 @@ export default function App() {
             }
           />
           <Route
-            path="/marketplace"
+            path="/user/marketplace"
             element={
               <Protected>
                 <Marketplace />
@@ -77,7 +105,7 @@ export default function App() {
             }
           />
           <Route
-            path="/lostfound"
+            path="/user/lostfound"
             element={
               <Protected>
                 <LostFound />
@@ -85,7 +113,7 @@ export default function App() {
             }
           />
           <Route
-            path="/alumni"
+            path="/user/alumni"
             element={
               <Protected>
                 <Alumni />
@@ -93,7 +121,7 @@ export default function App() {
             }
           />
           <Route
-            path="/hackathons"
+            path="/user/hackathons"
             element={
               <Protected>
                 <Hackathons />
@@ -101,15 +129,61 @@ export default function App() {
             }
           />
           <Route
-            path="/notices"
+            path="/user/notices"
             element={
               <Protected>
                 <Notices />
               </Protected>
             }
           />
+
+          {/* Admin-protected routes */}
+          <Route
+            path="/admin"
+            element={
+              <AdminProtected>
+                <AdminDashboard />
+              </AdminProtected>
+            }
+          />
+          <Route
+            path="/admin/events"
+            element={
+              <AdminProtected>
+                <EventForm />
+              </AdminProtected>
+            }
+          />
+          <Route
+            path="/admin/hackathons"
+            element={
+              <AdminProtected>
+                <HackathonForm />
+              </AdminProtected>
+            }
+          />
+          <Route
+            path="/admin/notices"
+            element={
+              <AdminProtected>
+                <NoticeForm />
+              </AdminProtected>
+            }
+          />
+          <Route
+            path="/admin/lostfound"
+            element={
+              <AdminProtected>
+                <LostFoundForm />
+              </AdminProtected>
+            }
+          />
+
+          {/* Catch-all 404 */}
+          <Route path="*" element={<h1>404 - Page Not Found</h1>} />
         </Routes>
       </Shell>
+
       <Footer />
     </div>
   );

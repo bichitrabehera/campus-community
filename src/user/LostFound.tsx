@@ -58,40 +58,8 @@ export default function LostFound() {
       </div>
 
       {/* New Item Form */}
-      <div className="p-4 border rounded-2xl bg-gray-50 shadow-sm">
-        <h2 className="text-lg font-semibold mb-3">New</h2>
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
-          <input
-            className="border rounded-md px-3 py-2"
-            placeholder="item"
-            type="text"
-            value={form["item"] || ""}
-            onChange={(e) =>
-              setForm((p: any) => ({ ...p, item: e.target.value }))
-            }
-          />
-          <input
-            className="border rounded-md px-3 py-2"
-            placeholder="location"
-            type="text"
-            value={form["location"] || ""}
-            onChange={(e) =>
-              setForm((p: any) => ({ ...p, location: e.target.value }))
-            }
-          />
-          <input
-            className="border rounded-md px-3 py-2"
-            placeholder="status"
-            type="text"
-            value={form["status"] || ""}
-            onChange={(e) =>
-              setForm((p: any) => ({ ...p, status: e.target.value }))
-            }
-          />
-        </div>
-      </div>
 
-      {error && <div className="text-red-600">{error}</div>}
+
     </div>
   );
 }

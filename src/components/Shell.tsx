@@ -3,15 +3,15 @@ import { useAuthStore } from "@/store/auth";
 import { useState } from "react";
 
 const links = [
-  ["Events", "/events"],
-  ["Forum", "/forum"],
-  ["Projects", "/projects"],
-  ["Clubs", "/clubs"],
-  ["Marketplace", "/marketplace"],
-  ["Lost & Found", "/lostfound"],
-  ["Alumni", "/alumni"],
-  ["Hackathons", "/hackathons"],
-  ["Notices", "/notices"],
+  ["Events", "/user/events"],
+  ["Forum", "/user/forum"],
+  ["Projects", "/user/projects"],
+  // ["Clubs", "/user/clubs"],
+  // ["Marketplace", "/user/marketplace"],
+  // ["Lost & Found", "/user/lostfound"],
+  // ["Alumni", "/user/alumni"],
+  ["Hackathons", "/user/hackathons"],
+  ["Notices", "/user/notices"],
 ] as const;
 
 export default function Shell({ children }: { children: React.ReactNode }) {
@@ -24,9 +24,9 @@ export default function Shell({ children }: { children: React.ReactNode }) {
   );
 
   return (
-    <div className="min-h-screen flex flex-col bg-gradient-to-br from-black to-black">
+    <div className=" flex flex-col">
       {!isAuthPage && (
-        <header className="sticky top-0 z-20 bg-black shadow-md">
+        <header className="sticky top-0 z-20 shadow-md bg-[#111111] py-2">
           <div className="max-w-7xl mx-auto px-4 md:px-8 flex items-center justify-between h-16">
             {/* Logo */}
             <div className="flex items-center space-x-2 font-bold text-xl text-white">
@@ -65,7 +65,7 @@ export default function Shell({ children }: { children: React.ReactNode }) {
               className="md:hidden p-2 rounded hover:bg-gray-100"
             >
               <svg
-                className="h-6 w-6 text-gray-700"
+                className="h-6 w-6 text-gray-200"
                 fill="none"
                 viewBox="0 0 24 24"
                 stroke="currentColor"
@@ -131,7 +131,7 @@ export default function Shell({ children }: { children: React.ReactNode }) {
         </header>
       )}
 
-      <main className="flex-1 max-w-7xl mx-auto w-full p-6">{children}</main>
+      <main className="flex-1 max-w-7xl mx-auto w-full p-6 min-h-screen">{children}</main>
     </div>
   );
 }

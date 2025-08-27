@@ -1,0 +1,50 @@
+import { useEffect, useState } from "react";
+import { api } from "@/services/api";
+
+type Item = any;
+
+export default function Hackathons() {
+  const [items, setItems] = useState<Item[]>([]);
+  const [form, setForm] = useState<any>({});
+  const [error, setError] = useState<string | null>(null);
+
+  async function load() {
+    try {
+      const { data } = await api.get("/hackathons");
+      setItems(data);
+    } catch (e: any) {
+      setError(e?.response?.data?.detail || e.message);
+    }
+  }
+  useEffect(() => {
+    load();
+  }, []);
+
+
+
+  return (
+    <div className="space-y-6 p-4">
+      {/* Hackathons List */}
+      <div className="bg-white border rounded-lg shadow p-4">
+        <div className="flex items-center justify-between mb-4">
+          <h2 className="text-xl font-semibold">Hackathons</h2>
+
+        </div>
+
+        <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-3">
+          {items.map((it, i) => (
+            <div key={i} className="border rounded-lg p-3 bg-gray-50">
+              <pre className="text-xs overflow-auto max-h-48">
+                {JSON.stringify(it, null, 2)}
+              </pre>
+            </div>
+          ))}
+        </div>
+      </div>
+
+
+      {/* Error Message */}
+      {error && <div className="text-red-600">{error}</div>}
+    </div>
+  );
+}

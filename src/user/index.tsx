@@ -11,59 +11,59 @@ import {
   Bell,
 } from "lucide-react";
 
-export default function Dashboard() {
+export default function Index() {
   const cards = [
     {
       label: "Events",
-      path: "/events",
+      path: "/user/events",
       icon: Calendar,
       desc: "Explore and join upcoming campus events.",
     },
     {
       label: "Forum",
-      path: "/forum",
+      path: "/user/forum",
       icon: Users,
       desc: "Engage in discussions and share ideas.",
     },
     {
       label: "Projects",
-      path: "/projects",
+      path: "/user/projects",
       icon: FolderKanban,
       desc: "Showcase and collaborate on projects.",
     },
     {
       label: "Clubs",
-      path: "/clubs",
+      path: "/user/clubs",
       icon: Building2,
       desc: "Find and connect with student clubs.",
     },
     {
       label: "Marketplace",
-      path: "/marketplace",
+      path: "/user/marketplace",
       icon: ShoppingBag,
       desc: "Buy and sell within the campus community.",
     },
     {
       label: "Lost & Found",
-      path: "/lostfound",
+      path: "/user/lostfound",
       icon: Search,
       desc: "Report and recover lost items.",
     },
     {
       label: "Alumni",
-      path: "/alumni",
+      path: "/user/alumni",
       icon: GraduationCap,
       desc: "Connect with alumni for mentorship.",
     },
     {
       label: "Hackathons",
-      path: "/hackathons",
+      path: "/user/hackathons",
       icon: Trophy,
       desc: "Participate in hackathons and challenges.",
     },
     {
       label: "Notices",
-      path: "/notices",
+      path: "/user/notices",
       icon: Bell,
       desc: "Stay updated with campus announcements.",
     },

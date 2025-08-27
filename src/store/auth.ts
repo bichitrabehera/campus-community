@@ -1,7 +1,8 @@
 import { create } from "zustand";
 import { api } from "@/services/api";
+import { UserRoleType, isAdmin } from "@/utils/roles";
 
-type User = { id: number; name: string; email: string; role: string };
+type User = { id: number; name: string; email: string; role: UserRoleType };
 type State = {
   token: string | null;
   user: User | null;
@@ -16,21 +17,32 @@ export const useAuthStore = create<State>((set) => ({
   user: localStorage.getItem("user")
     ? JSON.parse(localStorage.getItem("user")!)
     : null,
+
   async login(email, password) {
     const { data } = await api.post("/auth/login", { email, password });
     localStorage.setItem("token", data.access_token);
     set({ token: data.access_token });
+
     const me = await api.get("/auth/me");
     localStorage.setItem("user", JSON.stringify(me.data));
     set({ user: me.data });
-    window.location.href = "/dashboard";
+
+    // ✅ Redirect based on role
+    if (isAdmin(me.data.role)) {
+      window.location.href = "/admin";
+    } else {
+      window.location.href = "/";
+    }
   },
+
   async register(payload) {
     await api.post("/auth/register", payload);
   },
+
   async verify(email, code) {
     await api.post("/auth/verify", { email, code });
   },
+
   logout() {
     localStorage.removeItem("token");
     localStorage.removeItem("user");
