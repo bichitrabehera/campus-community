@@ -70,24 +70,24 @@ export default function Index() {
   ];
 
   return (
-    <div className="p-6">
-      <h1 className="text-2xl font-bold mb-6">Welcome to Campus Connect 🎓</h1>
+    <div className="p-0">
+      <h1 className="text-2xl font-bold mb-6">Welcome to Campus Connect</h1>
       <p className="text-gray-600 mb-10">
         Select a section below to get started.
       </p>
 
-      <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
+      <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-3 mb-40">
         {cards.map(({ label, path, icon: Icon, desc }, i) => (
           <Link
             key={i}
             to={path}
-            className="block border rounded-xl p-5 shadow hover:shadow-lg transition group"
+            className="block border rounded-xl p-4 md:p-5 shadow hover:shadow-lg transition group"
           >
             <div className="flex items-center gap-3 mb-3">
               <Icon className="h-6 w-6 text-blue-600 group-hover:text-blue-800 transition" />
               <h2 className="text-lg font-semibold">{label}</h2>
             </div>
-            <p className="text-sm text-gray-600">{desc}</p>
+            <p className="text-sm text-gray-600 md">{desc}</p>
           </Link>
         ))}
       </div>

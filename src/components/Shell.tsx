@@ -27,7 +27,7 @@ export default function Shell({ children }: { children: React.ReactNode }) {
     <div className=" flex flex-col">
       {!isAuthPage && (
         <header className="sticky top-0 z-20 shadow-md bg-[#111111] py-2">
-          <div className="max-w-7xl mx-auto px-4 md:px-8 flex items-center justify-between h-16">
+          <div className="max-w-7xl mx-auto px-4 md:px-8 flex items-center justify-between py-2">
             {/* Logo */}
             <div className="flex items-center space-x-2 font-bold text-xl text-white">
               <CampusIcon />
@@ -95,12 +95,15 @@ export default function Shell({ children }: { children: React.ReactNode }) {
 
               {/* Sidebar */}
               <div className="absolute right-0 top-0 h-full w-64 bg-white shadow-lg flex flex-col">
+                <div className="pt-10 text-center">
+                  <h1 className="text-xl font-bold">Campus Community</h1>
+                </div>
                 <div className="flex-1 overflow-y-auto p-4 mt-10 space-y-2">
                   {links.map(([label, href]) => (
                     <Link
                       key={href}
                       to={href}
-                      className={`block px-3 py-2 rounded text-sm ${
+                      className={`block px-3 py-2 rounded text-sm border-black border-1 ${
                         pathname.startsWith(href)
                           ? "text-indigo-700 font-semibold bg-indigo-50"
                           : "text-gray-700 hover:bg-gray-50"
